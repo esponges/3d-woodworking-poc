@@ -1,6 +1,7 @@
 'use client'
 
 import { useForm } from "react-hook-form"
+import React, { useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -30,7 +31,7 @@ export function ConfigPanel() {
   const { config: cabinetConfig, setDimensions: setCabinetDimensions, setWoodType: setCabinetWoodType, setShelfCount } = useCabinetStore()
   const { selectedType, tableConfig, chairConfig, setSelectedType, updateTableConfig, updateChairConfig } = useFurnitureStore()
   
-  const getDefaultValues = () => {
+  const getDefaultValues = React.useCallback(() => {
     switch (selectedType) {
       case 'cabinet':
         return {
@@ -39,6 +40,15 @@ export function ConfigPanel() {
           height: cabinetConfig.dimensions.height,
           woodType: cabinetConfig.woodType,
           shelfCount: cabinetConfig.shelfCount,
+          // Set other fields to undefined to avoid uncontrolled input warnings
+          topThickness: undefined,
+          hasApron: undefined,
+          seatWidth: undefined,
+          seatDepth: undefined,
+          seatHeight: undefined,
+          backHeight: undefined,
+          hasArmrests: undefined,
+          style: undefined
         }
       case 'table':
         return {
@@ -48,6 +58,14 @@ export function ConfigPanel() {
           woodType: tableConfig.woodType,
           topThickness: tableConfig.dimensions.topThickness,
           hasApron: tableConfig.hasApron,
+          // Set other fields to undefined
+          shelfCount: undefined,
+          seatWidth: undefined,
+          seatDepth: undefined,
+          seatHeight: undefined,
+          backHeight: undefined,
+          hasArmrests: undefined,
+          style: undefined
         }
       case 'chair':
         return {
@@ -58,13 +76,28 @@ export function ConfigPanel() {
           woodType: chairConfig.woodType,
           hasArmrests: chairConfig.hasArmrests,
           style: chairConfig.style,
+          // Set other fields to undefined
+          width: undefined,
+          depth: undefined,
+          height: undefined,
+          shelfCount: undefined,
+          topThickness: undefined,
+          hasApron: undefined
         }
     }
-  }
+  }, [selectedType, cabinetConfig, tableConfig, chairConfig])
 
   const form = useForm<FormValues>({
     defaultValues: getDefaultValues(),
   })
+
+  // Reset form when furniture type changes
+  useEffect(() => {
+    const values = getDefaultValues()
+    Object.keys(values).forEach(key => {
+      form.setValue(key as keyof FormValues, values[key as keyof FormValues])
+    })
+  }, [selectedType, form, getDefaultValues])
 
   const onSubmit = (data: FormValues) => {
     switch (selectedType) {
@@ -378,24 +411,26 @@ export function ConfigPanel() {
                 />
               </>
             )}
-            <FormField
-              control={form.control}
-              name="shelfCount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Number of Shelves: {field.value}</FormLabel>
-                  <FormControl>
-                    <Slider
-                      min={0}
-                      max={5}
-                      step={1}
-                      value={[field.value!]}
-                      onValueChange={([value]) => field.onChange(value)}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            {selectedType === 'cabinet' && (
+              <FormField
+                control={form.control}
+                name="shelfCount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Number of Shelves: {field.value}</FormLabel>
+                    <FormControl>
+                      <Slider
+                        min={0}
+                        max={5}
+                        step={1}
+                        value={[field.value ?? 0]} /* Provide default value of 0 */
+                        onValueChange={([value]) => field.onChange(value)}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            )}
           </form>
         </Form>
       </CardContent>
