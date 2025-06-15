@@ -8,39 +8,39 @@ export interface WoodTextures {
 
 export const WOOD_TEXTURES: Record<WoodType, WoodTextures> = {
   oak: {
-    map: '/textures/oak/WoodFloor051_1K-JPG_Color.jpg',
+    map: '/textures/oak/color.jpg',
     roughness: 0.8,
   },
   maple: {
-    map: '/textures/maple/WoodFloor053_1K-JPG_Color.jpg',
+    map: '/textures/maple/color.jpg',
     roughness: 0.7,
   },
   cherry: {
-    map: '/textures/cherry/WoodFloor052_1K-JPG_Color.jpg',
+    map: '/textures/cherry/color.jpg',
     roughness: 0.6,
   },
   walnut: {
-    map: '/textures/walnut/WoodFloor054_1K-JPG_Color.jpg',
+    map: '/textures/walnut/color.jpg',
     roughness: 0.7,
   },
   pine: {
-    map: '/textures/pine/WoodFloor055_1K-JPG_Color.jpg',
+    map: '/textures/pine/color.jpg',
     roughness: 0.9,
   },
   fir: {
-    map: '/textures/pine/WoodFloor055_1K-JPG_Color.jpg', // Using pine as a temporary substitute
+    map: '/textures/pine/color.jpg', // Using pine as a temporary substitute
     roughness: 0.85,
   },
   cedar: {
-    map: '/textures/cherry/WoodFloor052_1K-JPG_Color.jpg', // Using cherry as a temporary substitute
+    map: '/textures/cherry/color.jpg', // Using cherry as a temporary substitute
     roughness: 0.75,
   },
   plywood: {
-    map: '/textures/oak/WoodFloor051_1K-JPG_Color.jpg', // Using oak as a temporary substitute
+    map: '/textures/oak/color.jpg', // Using oak as a temporary substitute
     roughness: 0.9,
   },
   mdf: {
-    map: '/textures/walnut/WoodFloor054_1K-JPG_Color.jpg', // Using walnut as a temporary substitute
+    map: '/textures/walnut/color.jpg', // Using walnut as a temporary substitute
     roughness: 0.95,
   },
 };

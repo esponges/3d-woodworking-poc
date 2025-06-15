@@ -1,6 +1,8 @@
-import { useRef } from 'react'
+'use client';
+
+import { useRef, Suspense } from 'react'
 import { useTexture } from '@react-three/drei'
-import { Group, Vector3Tuple, Texture } from 'three'
+import { Group, Vector3Tuple } from 'three'
 import { useCabinetStore } from '@/lib/store/cabinet'
 import { WOOD_TEXTURES } from '@/data/wood-textures'
 
@@ -15,22 +17,32 @@ interface CabinetPartProps {
   }
 }
 
-function CabinetPart({ position, dimensions, rotation = [0, 0, 0], woodTextures }: CabinetPartProps) {
-  const textures = useTexture({
-    map: woodTextures.map,
-    normalMap: woodTextures.normalMap || ''
-  })
+function CabinetPartContent({ position, dimensions, rotation = [0, 0, 0], woodTextures }: CabinetPartProps) {
+  // Load textures as an array
+  const [colorMap] = useTexture([woodTextures.map])
 
   return (
     <mesh position={position} rotation={rotation}>
       <boxGeometry args={dimensions} />
       <meshStandardMaterial 
-        map={textures.map as Texture}
-        normalMap={woodTextures.normalMap ? textures.normalMap as Texture : null}
+        map={colorMap}
         roughness={woodTextures.roughness}
         normalScale={[0.5, 0.5]}
       />
     </mesh>
+  )
+}
+
+function CabinetPart(props: CabinetPartProps) {
+  return (
+    <Suspense fallback={
+      <mesh position={props.position} rotation={props.rotation}>
+        <boxGeometry args={props.dimensions} />
+        <meshStandardMaterial color="#8B4513" roughness={0.8} />
+      </mesh>
+    }>
+      <CabinetPartContent {...props} />
+    </Suspense>
   )
 }
 
