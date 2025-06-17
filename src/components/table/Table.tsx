@@ -2,7 +2,9 @@
 
 import { useRef } from 'react';
 import { Mesh } from 'three';
+import { useTexture } from '@react-three/drei';
 import { TableConfig } from '@/types/furniture';
+import { WOOD_TEXTURES } from '@/data/wood-textures';
 
 interface TableProps {
   config: TableConfig;
@@ -15,16 +17,23 @@ export function Table({ config }: TableProps) {
 
   const {
     dimensions: { width, depth, height, topThickness },
-    // woodType,
+    woodType,
     hasApron,
   } = config;
+
+  const woodTextures = WOOD_TEXTURES[woodType];
+  const [colorMap] = useTexture([woodTextures.map]);
 
   return (
     <group>
       {/* Table Top */}
       <mesh ref={tableTopRef} position={[0, height, 0]}>
         <boxGeometry args={[width, topThickness, depth]} />
-        <meshStandardMaterial color='#d4b285' />
+        <meshStandardMaterial
+          map={colorMap}
+          roughness={woodTextures.roughness}
+          normalScale={[0.5, 0.5]}
+        />
       </mesh>
 
       {/* Table Legs */}
@@ -38,7 +47,11 @@ export function Table({ config }: TableProps) {
             position={[x, height / 2, z]}
           >
             <boxGeometry args={[2, height, 2]} />
-            <meshStandardMaterial color='#d4b285' />
+            <meshStandardMaterial
+              map={colorMap}
+              roughness={woodTextures.roughness}
+              normalScale={[0.5, 0.5]}
+            />
           </mesh>
         );
       })}
@@ -47,7 +60,11 @@ export function Table({ config }: TableProps) {
       {hasApron && (
         <mesh ref={apronRef} position={[0, height - 4, 0]}>
           <boxGeometry args={[width - 4, 3, depth - 4]} />
-          <meshStandardMaterial color='#d4b285' />
+          <meshStandardMaterial
+            map={colorMap}
+            roughness={woodTextures.roughness}
+            normalScale={[0.5, 0.5]}
+          />
         </mesh>
       )}
     </group>
