@@ -1,17 +1,18 @@
-'use client'
+'use client';
 
-import { useForm } from "react-hook-form"
-import React, { useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { WOOD_TYPES, WoodType } from "@/types/cabinet"
-import { useCabinetStore } from "@/lib/store/cabinet"
-import { useFurnitureStore } from "@/lib/store/furniture"
+import { useForm } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { WOOD_TYPES, WoodType } from '@/types/cabinet';
+import { useCabinetStore } from '@/lib/store/cabinet';
+import { useFurnitureStore } from '@/lib/store/furniture';
+import { CabinetForm } from './CabinetForm';
+import { TableForm } from './TableForm';
+import { ChairForm } from './ChairForm';
 
-type FormValues = {
+export type FormValues = {
   width: number;
   depth: number;
   height: number;
@@ -25,12 +26,24 @@ type FormValues = {
   backHeight?: number;
   hasArmrests?: boolean;
   style?: 'modern' | 'traditional';
-}
+};
 
 export function ConfigPanel() {
-  const { config: cabinetConfig, setDimensions: setCabinetDimensions, setWoodType: setCabinetWoodType, setShelfCount } = useCabinetStore()
-  const { selectedType, tableConfig, chairConfig, setSelectedType, updateTableConfig, updateChairConfig } = useFurnitureStore()
-  
+  const {
+    config: cabinetConfig,
+    setDimensions: setCabinetDimensions,
+    setWoodType: setCabinetWoodType,
+    setShelfCount,
+  } = useCabinetStore();
+  const {
+    selectedType,
+    tableConfig,
+    chairConfig,
+    setSelectedType,
+    updateTableConfig,
+    updateChairConfig,
+  } = useFurnitureStore();
+
   const getDefaultValues = React.useCallback(() => {
     switch (selectedType) {
       case 'cabinet':
@@ -48,8 +61,8 @@ export function ConfigPanel() {
           seatHeight: undefined,
           backHeight: undefined,
           hasArmrests: undefined,
-          style: undefined
-        }
+          style: undefined,
+        };
       case 'table':
         return {
           width: tableConfig.dimensions.width,
@@ -65,8 +78,8 @@ export function ConfigPanel() {
           seatHeight: undefined,
           backHeight: undefined,
           hasArmrests: undefined,
-          style: undefined
-        }
+          style: undefined,
+        };
       case 'chair':
         return {
           seatWidth: chairConfig.dimensions.seatWidth,
@@ -82,88 +95,91 @@ export function ConfigPanel() {
           height: undefined,
           shelfCount: undefined,
           topThickness: undefined,
-          hasApron: undefined
-        }
+          hasApron: undefined,
+        };
     }
-  }, [selectedType, cabinetConfig, tableConfig, chairConfig])
+  }, [selectedType, cabinetConfig, tableConfig, chairConfig]);
 
   const form = useForm<FormValues>({
     defaultValues: getDefaultValues(),
-  })
+  });
 
   // Reset form when furniture type changes
   useEffect(() => {
-    const values = getDefaultValues()
-    Object.keys(values).forEach(key => {
-      form.setValue(key as keyof FormValues, values[key as keyof FormValues])
-    })
-  }, [selectedType, form, getDefaultValues])
+    const values = getDefaultValues();
+    Object.keys(values).forEach((key) => {
+      form.setValue(key as keyof FormValues, values[key as keyof FormValues]);
+    });
+  }, [selectedType, form, getDefaultValues]);
 
   const onSubmit = (data: FormValues) => {
     switch (selectedType) {
       case 'cabinet':
-        setCabinetDimensions(data.width!, data.depth!, data.height!)
-        setCabinetWoodType(data.woodType as WoodType)
-        if (data.shelfCount !== undefined) setShelfCount(data.shelfCount)
-        break
+        setCabinetDimensions(data.width!, data.depth!, data.height!);
+        setCabinetWoodType(data.woodType as WoodType);
+        if (data.shelfCount !== undefined) setShelfCount(data.shelfCount);
+        break;
       case 'table':
         updateTableConfig({
           dimensions: {
             width: data.width!,
             depth: data.depth!,
             height: data.height!,
-            topThickness: data.topThickness!
+            topThickness: data.topThickness!,
           },
           woodType: data.woodType as WoodType, // todo: fix this cast
-          hasApron: data.hasApron
-        })
-        break
+          hasApron: data.hasApron,
+        });
+        break;
       case 'chair':
         updateChairConfig({
           dimensions: {
             seatWidth: data.seatWidth!,
             seatDepth: data.seatDepth!,
             seatHeight: data.seatHeight!,
-            backHeight: data.backHeight!
+            backHeight: data.backHeight!,
           },
           woodType: data.woodType as WoodType, // todo: fix this cast
           hasArmrests: data.hasArmrests!,
-          style: data.style!
-        })
-        break
+          style: data.style!,
+        });
+        break;
     }
-  }
+  };
 
   return (
-    <Card className="w-[350px]">
+    <Card className='w-[350px]'>
       <CardHeader>
         <CardTitle>
           <Select onValueChange={setSelectedType} defaultValue={selectedType}>
             <SelectTrigger>
-              <SelectValue placeholder="Select furniture type" />
+              <SelectValue placeholder='Select furniture type' />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="cabinet">Cabinet</SelectItem>
-              <SelectItem value="table">Table</SelectItem>
-              <SelectItem value="chair">Chair</SelectItem>
+              <SelectItem value='cabinet'>Cabinet</SelectItem>
+              <SelectItem value='table'>Table</SelectItem>
+              <SelectItem value='chair'>Chair</SelectItem>
             </SelectContent>
           </Select>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onChange={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onChange={form.handleSubmit(onSubmit)} className='space-y-4'>
             {/* Common Fields */}
             <FormField
               control={form.control}
-              name="woodType"
+              name='woodType'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Wood Type</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select wood type" />
+                        <SelectValue placeholder='Select wood type' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -178,262 +194,13 @@ export function ConfigPanel() {
               )}
             />
 
-            {/* Cabinet Fields */}
-            {selectedType === 'cabinet' && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="width"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Width (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="depth"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Depth (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="height"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Height (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="shelfCount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Number of Shelves</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
-
-            {/* Table Fields */}
-            {selectedType === 'table' && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="width"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Width (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="depth"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Depth (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="height"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Height (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="topThickness"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Top Thickness (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="hasApron"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Has Apron</FormLabel>
-                      <FormControl>
-                        <Select onValueChange={(value) => field.onChange(value === 'true')} defaultValue={field.value?.toString()}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select option" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="true">Yes</SelectItem>
-                            <SelectItem value="false">No</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
-
-            {/* Chair Fields */}
-            {selectedType === 'chair' && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="seatWidth"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Seat Width (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="seatDepth"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Seat Depth (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="seatHeight"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Seat Height (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="backHeight"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Back Height (inches)</FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="hasArmrests"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Has Armrests</FormLabel>
-                      <FormControl>
-                        <Select onValueChange={(value) => field.onChange(value === 'true')} defaultValue={field.value?.toString()}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select option" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="true">Yes</SelectItem>
-                            <SelectItem value="false">No</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="style"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Style</FormLabel>
-                      <FormControl>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select style" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="modern">Modern</SelectItem>
-                            <SelectItem value="traditional">Traditional</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
-            {selectedType === 'cabinet' && (
-              <FormField
-                control={form.control}
-                name="shelfCount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Number of Shelves: {field.value}</FormLabel>
-                    <FormControl>
-                      <Slider
-                        min={0}
-                        max={5}
-                        step={1}
-                        value={[field.value ?? 0]} /* Provide default value of 0 */
-                        onValueChange={([value]) => field.onChange(value)}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            )}
+            {/* Furniture Type Specific Fields */}
+            {selectedType === 'cabinet' && <CabinetForm form={form} />}
+            {selectedType === 'table' && <TableForm form={form} />}
+            {selectedType === 'chair' && <ChairForm form={form} />}
           </form>
         </Form>
       </CardContent>
     </Card>
-  )
+  );
 }
