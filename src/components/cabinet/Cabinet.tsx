@@ -3,7 +3,7 @@
 import { useRef, Suspense } from 'react';
 import { useTexture } from '@react-three/drei';
 import { Group, Vector3Tuple } from 'three';
-import { useCabinetStore } from '@/lib/store/cabinet';
+import { useFurnitureStore } from '@/lib/store/furniture';
 import { WOOD_TEXTURES } from '@/data/wood-textures';
 
 interface CabinetPartProps {
@@ -54,7 +54,7 @@ function CabinetPart(props: CabinetPartProps) {
 }
 
 export function Cabinet() {
-  const { config } = useCabinetStore();
+  const { cabinetConfig: config } = useFurnitureStore();
   const groupRef = useRef<Group>(null);
 
   // Convert inches to Three.js units (we'll use 1 inch = 0.1 units for better visualization)

@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { WOOD_TYPES, WoodType } from '@/types/cabinet';
-import { useCabinetStore } from '@/lib/store/cabinet';
 import { useFurnitureStore } from '@/lib/store/furniture';
 import { CabinetForm } from './CabinetForm';
 import { TableForm } from './TableForm';
@@ -30,16 +29,12 @@ export type FormValues = {
 
 export function ConfigPanel() {
   const {
-    config: cabinetConfig,
-    setDimensions: setCabinetDimensions,
-    setWoodType: setCabinetWoodType,
-    setShelfCount,
-  } = useCabinetStore();
-  const {
     selectedType,
+    cabinetConfig,
     tableConfig,
     chairConfig,
     setSelectedType,
+    updateCabinetConfig,
     updateTableConfig,
     updateChairConfig,
   } = useFurnitureStore();
@@ -115,9 +110,15 @@ export function ConfigPanel() {
   const onSubmit = (data: FormValues) => {
     switch (selectedType) {
       case 'cabinet':
-        setCabinetDimensions(data.width!, data.depth!, data.height!);
-        setCabinetWoodType(data.woodType as WoodType);
-        if (data.shelfCount !== undefined) setShelfCount(data.shelfCount);
+        updateCabinetConfig({
+          dimensions: {
+            width: data.width!,
+            depth: data.depth!,
+            height: data.height!,
+          },
+          woodType: data.woodType as WoodType,
+          ...(data.shelfCount !== undefined && { shelfCount: data.shelfCount }),
+        });
         break;
       case 'table':
         updateTableConfig({
@@ -127,7 +128,7 @@ export function ConfigPanel() {
             height: data.height!,
             topThickness: data.topThickness!,
           },
-          woodType: data.woodType as WoodType, // todo: fix this cast
+          woodType: data.woodType as WoodType,
           hasApron: data.hasApron,
         });
         break;
@@ -139,7 +140,7 @@ export function ConfigPanel() {
             seatHeight: data.seatHeight!,
             backHeight: data.backHeight!,
           },
-          woodType: data.woodType as WoodType, // todo: fix this cast
+          woodType: data.woodType as WoodType,
           hasArmrests: data.hasArmrests!,
           style: data.style!,
         });
