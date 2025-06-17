@@ -81,6 +81,7 @@ export function CabinetForm({ form }: CabinetFormProps) {
                 max={5}
                 step={1}
                 value={[field.value ?? 0]}
+                className='mt-2'
                 onValueChange={([value]) => field.onChange(value)}
               />
             </FormControl>
