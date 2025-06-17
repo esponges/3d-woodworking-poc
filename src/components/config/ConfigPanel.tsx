@@ -3,8 +3,9 @@
 import { useForm } from 'react-hook-form';
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { FormSelect } from '@/components/ui/form-select';
 import { WOOD_TYPES, WoodType } from '@/types/cabinet';
 import { useFurnitureStore } from '@/lib/store/furniture';
 import { CabinetForm } from './CabinetForm';
@@ -167,36 +168,14 @@ export function ConfigPanel() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form className='space-y-4'>
+          <form onChange={form.handleSubmit(onSubmit)} className='space-y-4'>
             {/* Common Fields */}
-            <FormField
-              control={form.control}
-              name='woodType'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Wood Type</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      form.handleSubmit(onSubmit)();
-                    }}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select wood type' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {WOOD_TYPES.map((wood) => (
-                        <SelectItem key={wood.value} value={wood.value}>
-                          {wood.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
+            <FormSelect
+              form={form}
+              name="woodType"
+              label="Wood Type"
+              options={WOOD_TYPES}
+              placeholder="Select wood type"
             />
 
             {/* Furniture Type Specific Fields */}
