@@ -108,6 +108,7 @@ export function ConfigPanel() {
   }, [selectedType, form, getDefaultValues]);
 
   const onSubmit = (data: FormValues) => {
+    console.log('Form submitted with data:', data);
     switch (selectedType) {
       case 'cabinet':
         updateCabinetConfig({
@@ -166,7 +167,7 @@ export function ConfigPanel() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onChange={form.handleSubmit(onSubmit)} className='space-y-4'>
+          <form className='space-y-4'>
             {/* Common Fields */}
             <FormField
               control={form.control}
@@ -175,8 +176,11 @@ export function ConfigPanel() {
                 <FormItem>
                   <FormLabel>Wood Type</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      form.handleSubmit(onSubmit)();
+                    }}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>

@@ -66,6 +66,7 @@ export function Cabinet() {
 
   // Get the wood textures
   const woodTextures = WOOD_TEXTURES[config.woodType];
+  console.log({ config, woodTextures });
 
   return (
     <group ref={groupRef}>
