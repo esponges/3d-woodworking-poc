@@ -71,47 +71,49 @@ export function Cabinet() {
     <group ref={groupRef}>
       {/* Back panel */}
       <CabinetPart
-        position={[0, height / 2, -depth / 2]}
-        dimensions={[width, height, thickness]}
+        position={[0, height / 2, -(depth - thickness) / 2]}
+        dimensions={[width - thickness * 2, height, thickness]}
         woodTextures={woodTextures}
       />
 
       {/* Left side */}
       <CabinetPart
-        position={[-width / 2, height / 2, 0]}
+        position={[-(width - thickness) / 2, height / 2, 0]}
         dimensions={[thickness, height, depth]}
         woodTextures={woodTextures}
       />
 
       {/* Right side */}
       <CabinetPart
-        position={[width / 2, height / 2, 0]}
+        position={[(width - thickness) / 2, height / 2, 0]}
         dimensions={[thickness, height, depth]}
         woodTextures={woodTextures}
       />
 
       {/* Top */}
       <CabinetPart
-        position={[0, height, 0]}
+        position={[0, height - thickness / 2, 0]}
         dimensions={[width, thickness, depth]}
         woodTextures={woodTextures}
       />
 
       {/* Bottom */}
       <CabinetPart
-        position={[0, 0, 0]}
+        position={[0, thickness / 2, 0]}
         dimensions={[width, thickness, depth]}
         woodTextures={woodTextures}
       />
 
       {/* Shelves */}
       {Array.from({ length: config.shelfCount }).map((_, i) => {
-        const shelfHeight = (height * (i + 1)) / (config.shelfCount + 1);
+        const shelfHeight =
+          ((height - thickness * 2) * (i + 1)) / (config.shelfCount + 1) +
+          thickness;
         return (
           <CabinetPart
             key={i}
             position={[0, shelfHeight, 0]}
-            dimensions={[width - thickness * 0.5, thickness, depth - thickness]}
+            dimensions={[width - thickness * 2, thickness, depth - thickness]}
             woodTextures={woodTextures}
           />
         );
