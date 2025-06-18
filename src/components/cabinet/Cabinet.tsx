@@ -72,35 +72,35 @@ export function Cabinet() {
       {/* Back panel */}
       <CabinetPart
         position={[0, height / 2, -(depth - thickness) / 2]}
-        dimensions={[width - thickness * 2, height, thickness]}
+        dimensions={[width - thickness * 2, height - thickness * 2, thickness]}
         woodTextures={woodTextures}
       />
 
       {/* Left side */}
       <CabinetPart
-        position={[-(width - thickness) / 2, height / 2, 0]}
+        position={[-(width / 2) + (thickness / 2), height / 2, 0]}
         dimensions={[thickness, height, depth]}
         woodTextures={woodTextures}
       />
 
       {/* Right side */}
       <CabinetPart
-        position={[(width - thickness) / 2, height / 2, 0]}
+        position={[(width / 2) - (thickness / 2), height / 2, 0]}
         dimensions={[thickness, height, depth]}
         woodTextures={woodTextures}
       />
 
       {/* Top */}
       <CabinetPart
-        position={[0, height - thickness / 2, 0]}
-        dimensions={[width, thickness, depth]}
+        position={[0, height - (thickness / 2), 0]}
+        dimensions={[width - thickness * 2, thickness, depth]}
         woodTextures={woodTextures}
       />
 
       {/* Bottom */}
       <CabinetPart
         position={[0, thickness / 2, 0]}
-        dimensions={[width, thickness, depth]}
+        dimensions={[width - thickness * 2, thickness, depth]}
         woodTextures={woodTextures}
       />
 
