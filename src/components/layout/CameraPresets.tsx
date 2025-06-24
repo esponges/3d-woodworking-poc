@@ -19,8 +19,16 @@ const CAMERA_PRESETS: Record<string, CameraPreset> = {
 
 export function CameraPresets({
   children,
+  canvasProps = {
+    position: [5, 5, 5],
+    fov: 45,
+  },
 }: {
   children: React.ReactNode;
+  canvasProps?: {
+    position?: Vector3Tuple;
+    fov?: number;
+  };
 }) {
   const [controls, setControls] = useState<CameraControls | null>(null);
 
@@ -58,12 +66,7 @@ export function CameraPresets({
           </Button>
         ))}
       </div>
-      <Canvas
-        camera={{
-          position: [5, 5, 5],
-          fov: 45,
-        }}
-      >
+      <Canvas camera={canvasProps}>
         <CameraControls ref={setControls} />
         <Environment preset='warehouse' background blur={0.5} />
         {children}
