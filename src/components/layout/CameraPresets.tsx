@@ -1,7 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Vector3Tuple } from 'three';
 import { CameraControls } from '@react-three/drei';
 import { Button } from '@/components/ui/button';
+import { Canvas } from '@react-three/fiber';
+import { Environment } from '@react-three/drei';
 
 type CameraPreset = {
   pos: Vector3Tuple;
@@ -17,11 +19,11 @@ const CAMERA_PRESETS: Record<string, CameraPreset> = {
 
 export function CameraPresets({
   children,
-  controls,
 }: {
   children: React.ReactNode;
-  controls: CameraControls | null;
 }) {
+  const [controls, setControls] = useState<CameraControls | null>(null);
+
   const setCameraPreset = useCallback(
     (preset: keyof typeof CAMERA_PRESETS) => {
       if (controls) {
@@ -56,7 +58,16 @@ export function CameraPresets({
           </Button>
         ))}
       </div>
-      {children}
+      <Canvas
+        camera={{
+          position: [5, 5, 5],
+          fov: 45,
+        }}
+      >
+        <CameraControls ref={setControls} />
+        <Environment preset='warehouse' background blur={0.5} />
+        {children}
+      </Canvas>
     </div>
   );
 }
