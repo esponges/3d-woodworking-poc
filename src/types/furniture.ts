@@ -1,5 +1,7 @@
 import { WoodType } from './cabinet';
 
+export type FurnitureType = 'cabinet' | 'table' | 'chair';
+
 export interface TableDimensions {
   width: number;      // in inches
   depth: number;      // in inches
