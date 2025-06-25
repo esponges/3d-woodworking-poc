@@ -2,19 +2,14 @@
 
 import { OrbitControls } from '@react-three/drei';
 import { Chair } from './Chair';
-import { ChairConfig } from '@/types/furniture';
 import { CameraPresets } from '../layout/CameraPresets';
 
-interface ChairSceneProps {
-  config: ChairConfig;
-}
-
-export function ChairScene({ config }: ChairSceneProps) {
+export function ChairScene() {
   return (
     <CameraPresets>
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 10]} intensity={1} />
-      <Chair config={config} />
+      <Chair />
       <OrbitControls enableDamping />
       <gridHelper args={[20, 20]} />
     </CameraPresets>

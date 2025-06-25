@@ -14,9 +14,9 @@ export default function Home() {
       case 'cabinet':
         return <CabinetScene />
       case 'table':
-        return <TableScene config={useFurnitureStore.getState().tableConfig} />
+        return <TableScene />
       case 'chair':
-        return <ChairScene config={useFurnitureStore.getState().chairConfig} />
+        return <ChairScene />
       default:
         return <CabinetScene />
     }

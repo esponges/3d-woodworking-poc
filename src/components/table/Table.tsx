@@ -3,14 +3,13 @@
 import { useRef } from 'react';
 import { Mesh } from 'three';
 import { useTexture } from '@react-three/drei';
-import { TableConfig } from '@/types/furniture';
 import { WOOD_TEXTURES } from '@/data/wood-textures';
+import { useFurnitureStore } from '@/lib/store/furniture';
 
-interface TableProps {
-  config: TableConfig;
-}
 
-export function Table({ config }: TableProps) {
+export function Table() {
+  const { tableConfig: config } = useFurnitureStore();
+
   const tableTopRef = useRef<Mesh>(null);
   const legsRef = useRef<Mesh[]>([]);
   const apronRef = useRef<Mesh>(null);

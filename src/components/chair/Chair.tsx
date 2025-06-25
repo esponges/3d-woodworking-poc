@@ -3,14 +3,13 @@
 import { useRef } from 'react';
 import { Mesh } from 'three';
 import { useTexture } from '@react-three/drei';
-import { ChairConfig } from '@/types/furniture';
 import { WOOD_TEXTURES } from '@/data/wood-textures';
+import { useFurnitureStore } from '@/lib/store/furniture';
 
-interface ChairProps {
-  config: ChairConfig;
-}
 
-export function Chair({ config }: ChairProps) {
+export function Chair() {
+  const { chairConfig: config } = useFurnitureStore();
+
   const seatRef = useRef<Mesh>(null);
   const backRef = useRef<Mesh>(null);
   const legsRef = useRef<Mesh[]>([]);
